@@ -18,9 +18,18 @@ class sysstat::service {
   }
 
   if $::osfamily == 'Debian' {
-    augeas { '/etc/default/sysstat':
-      context => '/files/etc/default/sysstat/',
-      changes => 'set ENABLED true',
+    file { '/etc/default/sysstat':
+      ensure => file,
+      content => @(EOF)
+        # Default settings for /etc/init.d/sysstat, /etc/cron.d/sysstat
+        # and /etc/cron.daily/sysstat files
+        #
+
+        # Should sadc collect system activity informations? Valid values
+        # are "true" and "false". Please do not put other values, they
+        # will be overwritten by debconf!
+        ENABLED="true"
+        | EOF
     }
   }
 }
